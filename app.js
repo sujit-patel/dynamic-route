@@ -18,11 +18,11 @@ app.get('/', function(req, res) {
 
     fs.readdir(directoryPath, function(err, files) {
         if (err) {
-            console.error("Unable to scan directory:", err);
+            // console.error("Unable to scan directory:", err);
             res.status(500).send("Server Error");
         } else {
             // Log the files array to the console
-            console.log("Files in directory:", files);
+            // console.log("Files in directory:", files);
             res.render("index", { files: files });
         }
     });
@@ -41,6 +41,16 @@ app.get('/files/:fileName', function(req,res) {
         res.render("showfile", {filetitel: req.params.fileName, filedata});
     });
 });
+
+app.get('/edit/:filename', function(req, res){
+    res.render("edit",{filename: req.params.filename})
+})
+
+app.post('/edit', function(req,res){
+    fs.rename(`./files/${req.body.old}`, `./files/${req.body.new}`, function(err){
+        res.redirect('/')
+    })
+})
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
